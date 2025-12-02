@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from .api import cats as cats_router
+from .api import missions as missions_router
 from .db import Base, engine
 from .deps import get_app_settings
 from .settings import Settings
@@ -24,6 +25,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
 
     application.include_router(cats_router.router)
+    application.include_router(missions_router.router)
 
     @application.get("/health")
     async def health() -> dict[str, str]:

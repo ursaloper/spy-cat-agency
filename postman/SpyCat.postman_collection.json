@@ -1,0 +1,199 @@
+{
+  "info": {
+    "name": "Spy Cat Agency",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "placeholder-spy-cat-agency"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Cats",
+      "item": [
+        {
+          "name": "Create cat",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kitty\",\n  \"years_experience\": 2,\n  \"breed\": \"Abyssinian\",\n  \"salary\": \"5000.00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cats",
+              "host": ["{{base_url}}"],
+              "path": ["cats"]
+            }
+          }
+        },
+        {
+          "name": "List cats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cats",
+              "host": ["{{base_url}}"],
+              "path": ["cats"]
+            }
+          }
+        },
+        {
+          "name": "Get cat",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cats/:cat_id",
+              "host": ["{{base_url}}"],
+              "path": ["cats", ":cat_id"]
+            }
+          }
+        },
+        {
+          "name": "Update salary",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"salary\": \"6000.00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cats/:cat_id/salary",
+              "host": ["{{base_url}}"],
+              "path": ["cats", ":cat_id", "salary"]
+            }
+          }
+        },
+        {
+          "name": "Delete cat",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cats/:cat_id",
+              "host": ["{{base_url}}"],
+              "path": ["cats", ":cat_id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Missions",
+      "item": [
+        {
+          "name": "Create mission",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targets\": [\n    {\"name\": \"Target A\", \"country\": \"US\", \"notes\": \"note\"}\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/missions",
+              "host": ["{{base_url}}"],
+              "path": ["missions"]
+            }
+          }
+        },
+        {
+          "name": "List missions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/missions",
+              "host": ["{{base_url}}"],
+              "path": ["missions"]
+            }
+          }
+        },
+        {
+          "name": "Get mission",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/missions/:mission_id",
+              "host": ["{{base_url}}"],
+              "path": ["missions", ":mission_id"]
+            }
+          }
+        },
+        {
+          "name": "Assign cat",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cat_id\": \"<cat_uuid>\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/missions/:mission_id/assign",
+              "host": ["{{base_url}}"],
+              "path": ["missions", ":mission_id", "assign"]
+            }
+          }
+        },
+        {
+          "name": "Update target",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"updated\",\n  \"complete\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/missions/:mission_id/targets/:target_id",
+              "host": ["{{base_url}}"],
+              "path": ["missions", ":mission_id", "targets", ":target_id"]
+            }
+          }
+        },
+        {
+          "name": "Delete mission",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/missions/:mission_id",
+              "host": ["{{base_url}}"],
+              "path": ["missions", ":mission_id"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    }
+  ]
+}

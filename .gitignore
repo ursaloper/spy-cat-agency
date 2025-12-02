@@ -1,0 +1,45 @@
+# Virtual environments
+.venv/
+venv/
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Packaging
+*.egg
+*.egg-info/
+dist/
+build/
+
+# VS Code / PyCharm
+.vscode/
+.idea/
+
+# Environment files
+.env
+
+# Test / coverage
+.pytest_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+
+# Mypy / Ruff caches
+.mypy_cache/
+.ruff_cache/
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Project specific
+breeds.json
+docs

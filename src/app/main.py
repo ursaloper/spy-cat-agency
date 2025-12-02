@@ -2,13 +2,15 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from .db import Base, engine
 from .deps import get_app_settings
 from .settings import Settings
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Database initialization occurs during lifespan.
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     yield
 
 

@@ -10,10 +10,13 @@ from ..schemas.cats import CatCreate, CatUpdateSalary
 
 
 class CatService:
+    """Business logic for cat CRUD with breed validation and mission guards."""
+
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
     async def create_cat(self, payload: CatCreate) -> Cat:
+        """Create a cat after validating breed via TheCatAPI."""
         is_valid = await validate_breed(payload.breed)
         if not is_valid:
             raise HTTPException(
@@ -32,16 +35,19 @@ class CatService:
         return cat
 
     async def list_cats(self) -> list[Cat]:
+        """Return all cats."""
         result = await self.session.execute(select(Cat))
         return list(result.scalars().all())
 
     async def get_cat(self, cat_id: UUID) -> Cat:
+        """Return cat by id or raise 404."""
         cat = await self.session.get(Cat, cat_id)
         if not cat:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cat not found")
         return cat
 
     async def update_salary(self, cat_id: UUID, payload: CatUpdateSalary) -> Cat:
+        """Update salary for a cat."""
         cat = await self.get_cat(cat_id)
         cat.salary = payload.salary
         await self.session.commit()
@@ -49,6 +55,7 @@ class CatService:
         return cat
 
     async def delete_cat(self, cat_id: UUID) -> None:
+        """Delete cat if it is not assigned to an active mission."""
         cat = await self.get_cat(cat_id)
         active_mission = await self.session.execute(select(Mission).where(Mission.assigned_cat_id == cat_id, Mission.complete.is_(False)))
         if active_mission.scalars().first():

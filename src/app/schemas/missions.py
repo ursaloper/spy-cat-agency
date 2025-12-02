@@ -5,6 +5,8 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class TargetCreate(BaseModel):
+    """Payload for creating a mission target."""
+
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
     name: str = Field(min_length=1, max_length=150)
@@ -14,6 +16,8 @@ class TargetCreate(BaseModel):
 
 
 class TargetUpdate(BaseModel):
+    """Payload for updating target notes or completion."""
+
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
     notes: str | None = Field(default=None, max_length=2000)
@@ -21,6 +25,8 @@ class TargetUpdate(BaseModel):
 
 
 class TargetRead(BaseModel):
+    """Target representation for responses."""
+
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
     id: UUID
@@ -31,6 +37,8 @@ class TargetRead(BaseModel):
 
 
 class MissionCreate(BaseModel):
+    """Payload for creating a mission with targets."""
+
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
     targets: list[TargetCreate]
@@ -44,12 +52,16 @@ class MissionCreate(BaseModel):
 
 
 class MissionAssign(BaseModel):
+    """Payload for assigning a cat to a mission."""
+
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
     cat_id: UUID
 
 
 class MissionRead(BaseModel):
+    """Mission representation with nested targets."""
+
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
     id: UUID

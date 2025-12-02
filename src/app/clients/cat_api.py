@@ -6,17 +6,21 @@ from ..settings import get_settings
 
 
 class BreedCache:
+    """In-memory TTL cache for cat breeds."""
+
     def __init__(self, ttl_seconds: int = 300) -> None:
         self.ttl = timedelta(seconds=ttl_seconds)
         self.breeds: list[str] = []
         self.fetched_at: datetime | None = None
 
     def is_fresh(self) -> bool:
+        """Return True when cached data is within TTL window."""
         if self.fetched_at is None:
             return False
         return datetime.utcnow() - self.fetched_at < self.ttl
 
     def update(self, breeds: list[str]) -> None:
+        """Update cache contents and timestamp."""
         self.breeds = breeds
         self.fetched_at = datetime.utcnow()
 
@@ -25,6 +29,7 @@ breed_cache = BreedCache()
 
 
 async def fetch_breeds() -> list[str]:
+    """Fetch breed names from TheCatAPI."""
     settings = get_settings()
     base_url = settings.cat_api_base_url or "https://api.thecatapi.com/v1"
     url = f"{base_url}/breeds"
@@ -36,6 +41,7 @@ async def fetch_breeds() -> list[str]:
 
 
 async def validate_breed(breed: str) -> bool:
+    """Validate breed name using cached list of breeds from TheCatAPI."""
     if not breed_cache.is_fresh():
         breeds = await fetch_breeds()
         breed_cache.update(breeds)

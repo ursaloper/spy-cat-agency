@@ -9,6 +9,8 @@ def _quantize_salary(value: Decimal) -> Decimal:
 
 
 class CatBase(BaseModel):
+    """Shared cat fields with validation and salary quantization."""
+
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
     name: str = Field(min_length=1, max_length=100)
@@ -27,10 +29,14 @@ class CatBase(BaseModel):
 
 
 class CatCreate(CatBase):
+    """Payload for creating a cat."""
+
     pass
 
 
 class CatRead(BaseModel):
+    """Cat representation for responses."""
+
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
     id: UUID
@@ -45,6 +51,8 @@ class CatRead(BaseModel):
 
 
 class CatUpdateSalary(BaseModel):
+    """Payload for updating cat salary."""
+
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
     salary: Decimal = Field(gt=Decimal("0"))

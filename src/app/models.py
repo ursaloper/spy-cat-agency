@@ -11,6 +11,7 @@ from .db import Base
 
 class Cat(Base):
     __tablename__ = "cats"
+    """Spy cat entity with salary and breed information."""
 
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -23,6 +24,7 @@ class Cat(Base):
 
 class Mission(Base):
     __tablename__ = "missions"
+    """Mission entity containing targets and optional assigned cat."""
 
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
     assigned_cat_id: Mapped[UUID | None] = mapped_column(
@@ -37,6 +39,7 @@ class Mission(Base):
 
 class Target(Base):
     __tablename__ = "targets"
+    """Target entity belonging to a mission."""
 
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
     mission_id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), ForeignKey("missions.id", ondelete="CASCADE"), nullable=False)

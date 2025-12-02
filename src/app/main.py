@@ -11,12 +11,14 @@ from .settings import Settings
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Initialize application resources and teardown on shutdown."""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
+    """Create configured FastAPI application instance."""
     current_settings = settings or get_app_settings()
     application = FastAPI(
         title="Spy Cat Agency API",

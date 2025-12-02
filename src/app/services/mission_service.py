@@ -10,10 +10,13 @@ from ..schemas.missions import MissionAssign, MissionCreate, TargetUpdate
 
 
 class MissionService:
+    """Business logic for missions and targets, including assignment rules."""
+
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
     async def _get_mission(self, mission_id: UUID, with_targets: bool = False) -> Mission:
+        """Fetch mission by id with optional targets eager load."""
         stmt = select(Mission).where(Mission.id == mission_id)
         if with_targets:
             stmt = stmt.options(selectinload(Mission.targets))
@@ -24,13 +27,16 @@ class MissionService:
         return mission
 
     async def list_missions(self) -> list[Mission]:
+        """Return all missions with targets."""
         result = await self.session.execute(select(Mission).options(selectinload(Mission.targets)))
         return list(result.scalars().all())
 
     async def get_mission(self, mission_id: UUID) -> Mission:
+        """Return mission with targets by id."""
         return await self._get_mission(mission_id, with_targets=True)
 
     async def create_mission(self, payload: MissionCreate) -> Mission:
+        """Create mission with 1–3 targets."""
         targets_payload = payload.targets
         if not (1 <= len(targets_payload) <= 3):
             raise HTTPException(
@@ -59,6 +65,7 @@ class MissionService:
         return mission
 
     async def delete_mission(self, mission_id: UUID) -> None:
+        """Delete mission if not assigned to a cat."""
         mission = await self._get_mission(mission_id)
         if mission.assigned_cat_id is not None:
             raise HTTPException(
@@ -69,6 +76,7 @@ class MissionService:
         await self.session.commit()
 
     async def assign_cat(self, mission_id: UUID, payload: MissionAssign) -> Mission:
+        """Assign cat to mission ensuring cat is free and mission open."""
         mission = await self._get_mission(mission_id, with_targets=True)
         if mission.complete:
             raise HTTPException(
@@ -98,6 +106,7 @@ class MissionService:
         return mission
 
     async def update_target(self, mission_id: UUID, target_id: UUID, payload: TargetUpdate) -> Target:
+        """Update target notes/complete flags while respecting completion guards."""
         mission = await self._get_mission(mission_id, with_targets=True)
         target = next((t for t in mission.targets if t.id == target_id), None)
         if not target:
@@ -120,6 +129,7 @@ class MissionService:
         return target
 
     async def _update_mission_completion(self, mission: Mission) -> None:
+        """Mark mission complete when all targets are complete."""
         if all(target.complete for target in mission.targets):
             mission.complete = True
             await self.session.commit()
